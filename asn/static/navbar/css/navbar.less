@@ -1,0 +1,218 @@
+@baseFont:'Oxygen', sans-serif;
+@backgroundColor : #D2D2D2;
+@navFontColor : #908F8F;
+
+.sideNav{ //Preventing Selection In Navbar
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  transition: width 0.3s ease;
+  overflow: hidden;
+
+}
+
+.sideNav.expand {
+  width: 220px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #2b333d;
+  background-color: lighten(@backgroundColor,15%);
+  box-shadow: 0px 2px 3px rgba(0,0,0, 0.3);
+  .wrapper{
+    height: 100vh;
+
+    .head{
+      color: darken(@navFontColor,5%);
+      padding: 20px;
+      background-color: #333c47;
+      background-color: lighten(@backgroundColor,15%);
+      box-shadow: -2px 0px 3px rgba(0,0,0, 0.3);
+      width: 220px;
+
+      h3{
+        margin: 0;
+        font-size: 1.3em;
+        font-weight: 300;
+      }
+
+      h3.short{
+        display: none;
+      }
+    }
+
+    .tabs_a {
+      padding-top: 10px;
+      a{
+        text-decoration: none;
+        color: darken(@navFontColor,5%);
+        div.tab{
+          padding: 15px;
+          padding-left: 20px;
+          width: 220px;
+          border-left: 3px solid transparent;
+
+          &:hover{
+            border-left: 3px solid red;
+          }
+
+          h4 {
+            display: inline-block;
+            margin: 0;
+            font-size: 1em;
+            font-weight: 300;
+            font-size: 1.1em;
+          }
+        }
+      }
+    }
+
+    .accounts{
+      position: absolute;
+      bottom: 45px;
+      padding: 3px;
+      padding-left: 40px;
+      width: 220px;
+      background-color: lighten(@backgroundColor,15%);
+      a{
+        text-decoration: none;
+        color: darken(@navFontColor, 5%);
+        .login-signup{
+          h4{
+            font-family: @baseFont;
+            font-size: 1.2em;
+            font-weight: 300;
+            display: inline-block;
+          }
+        }
+      }
+    }
+
+    .navToggle{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      div.cola{
+        color: @navFontColor;
+        cursor: pointer;
+
+        h3 {
+          margin: 0;
+          font-size: 2em;
+          font-weight: 100;
+          padding-top:5px;
+          padding-bottom: 5px;
+          text-align: center;
+          box-shadow: -2px 0px 3px rgba(0,0,0, 0.3);
+        }
+        h3.right_a{
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.sideNav.collapsed {
+  width: 58px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #2b333d;
+  background-color: lighten(@backgroundColor,15%);
+  box-shadow: 0px 2px 3px rgba(0,0,0, 0.3);
+  .wrapper{
+    height: 100vh;
+
+    .head{
+      color: darken(@navFontColor,5%);
+      padding: 20px;
+      padding-left: 10px;
+      padding-right: 10px;
+      background-color: #333c47;
+      background-color: lighten(@backgroundColor,15%);
+      box-shadow: -2px 0px 3px rgba(0,0,0, 0.3);
+
+      h3{
+        margin: 0;
+        font-size: 1.3em;
+        font-weight: 300;
+      }
+
+      h3.full{
+        display: none;
+      }
+    }
+
+    .tabs_a {
+      padding-top: 10px;
+      a{
+        text-decoration: none;
+        color: darken(@navFontColor,5%);
+        div.tab{
+          padding: 15px;
+          padding-left: 20px;
+          border-left: 3px solid transparent;
+
+          &:hover{
+            border-left: 3px solid red;
+          }
+
+          h4 {
+            display: none;
+            margin: 0;
+            font-size: 1em;
+            font-weight: 300;
+            font-size: 1.1em;
+          }
+        }
+      }
+    }
+
+    .accounts{
+      position: absolute;
+      bottom: 53px;
+      padding: 3px;
+      padding-left: 22px;
+      background-color: lighten(@backgroundColor,15%);
+      a{
+        text-decoration: none;
+        color: darken(@navFontColor, 5%);
+        .login-signup{
+          h4{
+            font-family: @baseFont;
+            font-size: 1.2em;
+            font-weight: 300;
+            display: none;
+          }
+        }
+      }
+    }
+
+    .navToggle{
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      div.cola{
+        color: @navFontColor;
+        cursor: pointer;
+
+        h3 {
+          margin: 0;
+          font-size: 2em;
+          font-weight: 100;
+          padding-top:5px;
+          padding-bottom: 5px;
+          text-align: center;
+          box-shadow: -2px 0px 3px rgba(0,0,0, 0.3);
+        }
+
+        h3.left_a{
+          display: none;
+        }
+      }
+    }
+  }
+}

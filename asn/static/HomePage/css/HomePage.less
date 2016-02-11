@@ -1,0 +1,30 @@
+@baseFont:'Oxygen', sans-serif;
+@backgroundColor : #D2D2D2;
+@navFontColor : #908F8F;
+
+.page {
+  font-family: @baseFont;
+  margin-left: 220px;
+  transition: margin-left 0.3s ease;
+
+  .mainContent{
+
+    .wrapper{
+
+      button.login{
+        background-color: rgb(235,0,40);
+        color: white;
+        border: 5px solid rgb(235,0,40);;
+        border-radius: 5px;
+        font-weight: 400;
+        width: 100px;
+        height: 40px;
+
+        &:focus{
+          box-shadow: none;
+          outline: none;
+        }
+      }
+    }
+  }
+}

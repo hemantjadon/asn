@@ -1,0 +1,16 @@
+{% load staticfiles %}
+
+<link rel="stylesheet/less" type="text/css" href={% static "HomePage/css/HomePage.less" %}>
+<script type = 'text/javascript' src= {% static "fbSDK/fbSDK.js" %}></script>
+A
+{%if request.user.is_anonymous %}
+  <button role="login" class="login">
+    Login
+  </button>
+{% else %}
+<button role="logout" class="logout">
+  Logout
+</button>
+{% endif %}
+<script type="text/javascript" src={% static "HomePage/js/HomePage.js"%}></script>
+<script src={% static "less.js-master/dist/less.js" %} type="text/javascript"></script>

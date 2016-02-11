@@ -1,0 +1,124 @@
+var check_continue_reading = function(){  //------------------ A helper function to check If Continue Reading required in a blog or not
+  var blogText = $(".page .feedBlog .blog .blogText");
+  for(i=0;i<blogText.length;i++){
+    if (blogText[i].offsetHeight < blogText[i].scrollHeight){
+    }
+    else {
+      $(blogText[i]).children(".continueReading").css({"display":"none",});
+    }
+  }
+}
+
+var FeedBox = React.createClass({
+  getInitialState: function(){
+    return {data:[]}
+  },
+
+  componentDidMount: function() {
+    $.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      cache: false,
+      success: function(data) {
+        this.setState({data: data});
+        check_continue_reading(); //--- Removes continue reading if not required
+        continueReading.init();  //--- Enables continueReading so that it expands or collapses the blocks
+        Prism.highlightAll(); //--- Enables Prism Highlighting For All
+        $('ul.tabs').tabs();  //--- Initialize Materialize tabs
+        $('img').addClass("responsive-img"); //--- Making images of blogs responsive-img
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.log(xhr);
+      }.bind(this),
+    });
+  },
+
+  render: function(){
+    return (
+      <div className="feedBox">
+        <FeedBlog data = {this.state.data}/>
+      </div>
+    );
+  },
+});
+
+var FeedBlog = React.createClass({
+  render: function(){
+    var blogTabs = function(blog){
+      var text = "#blogText"+blog.id
+      var code = "#blogCode"+blog.id
+      var image = "#blogImages"+blog.id
+
+      var rawMarkup = function() {
+        var rawMarkup = marked(blog.content)
+        add_linebreaks();
+        return { __html: rawMarkup };
+      }
+      var add_linebreaks = function(){
+        var x = blog.content.split('\n').map(function(item,index){
+          return(
+            <span key={index}>
+              {item}
+              <br/>
+            </span>
+          );
+        })
+        console.log(x);
+      }
+      return(
+        <div className="row">
+          <div className="col s12">
+            <ul className="tabs">
+              <li className="tab col s4">
+                <a href={text}>Content</a>
+              </li>
+              <li className="tab col s4">
+                <a href={code}>Code</a>
+              </li>
+              <li className="tab col s4">
+                <a href={image}>Images</a>
+              </li>
+            </ul>
+          </div>
+          <div id={text.slice(1)} className="col s12 blogText collapsed">
+            <div dangerouslySetInnerHTML={rawMarkup()} className="markedBox">
+            </div>
+            <div className="continueReading">
+              <h4><span>Continue Reading</span></h4>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    var blogNodes = this.props.data.map(function(blog){
+      return (
+        <div className="blog" key={blog.id}>
+          <div className="row">
+            <div className="col s12">
+              <div className="card grey-lighten-5">
+                <div className="card-content black-text">
+                  <span className="card-title">{blog.title}</span>
+                  {blogTabs(blog)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    });
+    return (
+      <div className="feedBlog">
+        {blogNodes}
+      </div>
+    );
+  },
+});
+ReactDOM.render(<FeedBox url="blogs/get-all/"/>,$("#content")[0]);
+
+marked.setOptions({
+  langPrefix: "language-",
+  gfm: true,
+  breaks: true,
+  sanitize: true,
+});

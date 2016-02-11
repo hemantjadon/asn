@@ -1,0 +1,21 @@
+{% extends "Base/base.html" %}
+{% load staticfiles %}
+{% block title %}ASN | Home{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet/less" type="text/css" href={% static "HomePage/css/HomePage.less" %}>
+{% endblock %}
+
+{% block top_scripts%}
+{% endblock %}
+
+{% block content %}
+	A
+
+	{%if request.user.is_anonymous %}
+	{% endif %}
+{% endblock %}
+
+{% block scripts %}
+	<script type="text/javascript" src={% static "HomePage/js/HomePage.js"%}></script>
+{% endblock %}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<link rel="stylesheet/less" type="text/css" href={% static "navbar/css/navbar.less" %}>
+<div class="sideNav expand">
+  <div class="wrapper">
+    <div class="head">
+      <h3 class="short">ASN</h3>
+      <h3 class="full">ASN - NSIT for ICPC</h3>
+    </div>
+    <div class="tabs_a">
+      <a href={% url 'home_page' %}>
+        <div class="tab home">
+          <i class="fa fa-home"></i>
+          <h4>&nbsp;&nbsp;&nbsp;Home</h4>
+        </div>
+      </a>
+      <a href = {% url 'fourm_page'%}>
+        <div class="tab fourms">
+          <i class="fa fa-users"></i>
+          <h4>&nbsp;&nbsp;Fourms</h4>
+        </div>
+      </a>
+      <a href = {% url 'blog_page' %}>
+        <div class="tab blogs">
+          <i class="fa fa-rss"></i>
+          <h4>&nbsp;&nbsp;&nbsp;Blogs</h4>
+        </div>
+      </a>
+      <a href = {% url 'event_page'%}>
+        <div class="tab events">
+          { }
+          <h4>&nbsp;&nbsp;&nbsp;Events</h4>
+        </div>
+      </a>
+      <a href = {% url 'snippet_page' %}>
+        <div class="tab snippets">
+          <i class="fa fa-clipboard"></i>
+          <h4>&nbsp;&nbsp;&nbsp;Snippets</h4>
+        </div>
+      </a>
+      <a href= {% url 'schedule_page' %}>
+        <div class="tab schedule">
+          <i class="fa fa-clock-o"></i>
+          <h4>&nbsp;&nbsp;&nbsp;Schedule</h4>
+        </div>
+      </a>
+    </div>
+    <div class="accounts">
+      {% if request.user.is_anonymous %}
+        <a href = '#'>
+          <div class="login-signup">
+            <i class="fa fa-sign-in"></i>
+            <h4>&nbsp;&nbsp;Login / Signup</h4>
+          </div>
+        </a>
+      {% else %}
+
+      {% endif %}
+    </div>
+    <div class="navToggle">
+      <div role="collapse" class="cola">
+        <h3 class="left_a"><i class="fa fa-angle-left"></i></h3>
+        <h3 class="right_a"><i class="fa fa-angle-right"></i></h3>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src={% static "navbar/js/navbar.js"%}></script>

@@ -1,0 +1,100 @@
+@baseFont:'Oxygen', sans-serif;
+@backgroundColor : #D2D2D2;
+@navFontColor : #908F8F;
+
+html{
+  background-color: lighten(@backgroundColor,15%);
+  background-color: #fafafa;
+}
+.page {
+  font-family: @baseFont;
+  margin-left: 220px;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+  background-color: lighten(@backgroundColor,15%);
+
+  a{
+    text-decoration: none;
+  }
+
+  .blog{
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    .row{
+      .card{
+        min-height:  500px;
+        position: relative;
+
+        ul.tabs{
+          a{
+            color: #F44336;
+          }
+          .indicator{
+            height: 2px;
+            background-color: lighten(red,20%);
+            transition: color 0.28s ease;
+          }
+        }
+
+        .row {
+
+            .blogText{
+            overflow: hidden;
+            word-wrap: break-word;
+            transition: max-height 3s ease;
+
+            .continueReading{
+              position: absolute;
+              bottom: 35px;
+              left: 0;
+              width: 100%;
+              background-color: rgba(255,255,255,0.9);
+
+              h4{
+                text-align: center;
+                color: @navFontColor;
+                font-weight: 300;
+                margin: 0;
+                font-size: 1.3em;
+                padding-top: 10px;
+                padding-bottom: 10px;
+
+                span{
+                  padding-top: 5px;
+                  padding-bottom: 5px;
+                  padding-left: 10px;
+                  padding-right: 10px;
+                  border: 1px solid @navFontColor;
+                  border-radius: 5px;
+                  cursor: pointer;
+
+                  &:hover{
+                    border: 1px solid #009688;
+                    color: #009688;
+                  }
+                }
+              }
+            }
+            p{
+              margin-top: 15px;
+              margin-bottom: 15px;
+            }
+            pre{
+              margin-top: 15px;
+              margin-bottom: 15px;
+              border-left-color: #E91E63;
+            }
+          }
+
+          .blogText.collapsed{
+            max-height: 350px;
+          }
+          .blogText.expand{
+            max-height: 10000vh;
+          }
+        }
+      }
+    }
+  }
+}
