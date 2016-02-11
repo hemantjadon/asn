@@ -1,20 +1,9 @@
-var check_continue_reading = function(){  //------------------ A helper function to check If Continue Reading required in a blog or not
-  var blogText = $(".page .feedBlog .blog .blogText");
-  for(i=0;i<blogText.length;i++){
-    if (blogText[i].offsetHeight < blogText[i].scrollHeight){
-    }
-    else {
-      $(blogText[i]).children(".continueReading").css({"display":"none",});
-    }
-  }
-}
-
 var FeedBox = React.createClass({
   getInitialState: function(){
     return {data:[]}
   },
 
-  componentDidMount: function() {
+  loadFeed: function(){
     $.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -33,6 +22,11 @@ var FeedBox = React.createClass({
     });
   },
 
+  componentDidMount: function() {
+    this.loadFeed();
+    setInterval(this.loadFeed,120000);
+  },
+
   render: function(){
     return (
       <div className="feedBox">
@@ -49,22 +43,11 @@ var FeedBlog = React.createClass({
       var code = "#blogCode"+blog.id
       var image = "#blogImages"+blog.id
 
-      var rawMarkup = function() {
+      var rawMarkup = function() {  //------ Raw HTML marking function .... Uses marked.js
         var rawMarkup = marked(blog.content)
-        add_linebreaks();
         return { __html: rawMarkup };
       }
-      var add_linebreaks = function(){
-        var x = blog.content.split('\n').map(function(item,index){
-          return(
-            <span key={index}>
-              {item}
-              <br/>
-            </span>
-          );
-        })
-        console.log(x);
-      }
+
       return(
         <div className="row">
           <div className="col s12">
@@ -115,6 +98,17 @@ var FeedBlog = React.createClass({
   },
 });
 ReactDOM.render(<FeedBox url="blogs/get-all/"/>,$("#content")[0]);
+
+var check_continue_reading = function(){  //------------------ A helper function to check If Continue Reading required in a blog or not
+  var blogText = $(".page .feedBlog .blog .blogText");
+  for(i=0;i<blogText.length;i++){
+    if (blogText[i].offsetHeight < blogText[i].scrollHeight){
+    }
+    else {
+      $(blogText[i]).children(".continueReading").css({"display":"none",});
+    }
+  }
+}
 
 marked.setOptions({
   langPrefix: "language-",
