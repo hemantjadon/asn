@@ -7,13 +7,6 @@ from django.contrib.auth import login,logout,authenticate
 from user.models import AuthUser,Email
 # Create your views here.
 
-def HomePage(request):
-    if(request.is_ajax() == False):
-        return render(request,'HomePage/HomePage.html',{})
-
-    else:
-        return render(request,'HomePage/HomePage_ajax.html',{})
-
 def FourmPage(request):
     return HttpResponse("hello")
 
