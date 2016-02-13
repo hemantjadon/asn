@@ -1,3 +1,4 @@
 *.pyc
 migrations/
 venv/
+social_auth_config.py

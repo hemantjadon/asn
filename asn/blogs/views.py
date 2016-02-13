@@ -1,15 +1,25 @@
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.http import HttpResponse,JsonResponse
 from django.contrib.humanize.templatetags.humanize import naturalday,naturaltime
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from blogs.models import *
+
+from blogs import ajax_files
 # Create your views here.
 
 def BlogPage(request):
     blogs = Blog.objects.all()
     if (request.is_ajax() == False):
-        return render(request,'BlogPage/BlogPage.html',{"blogs":blogs})
+        return render(request,"BlogPage/BlogPage.html",{})
+
     else:
-        return render(request,'BlogPage/BlogPage_ajax.html',{"blogs":blogs})
+        response = {}
+        response["stylesheets"]=ajax_files.stylesheets
+        response["top_scripts"]=ajax_files.top_scripts
+        response["scripts"]=ajax_files.scripts
+        response["rendered_string"]=render_to_string("BlogPage/BlogPage_ajax.html",{"request":request})
+        return JsonResponse(response)
 
 def GetAllBlogs(request):
     blogs = Blog.objects.all()

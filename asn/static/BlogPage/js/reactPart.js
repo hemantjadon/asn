@@ -4,8 +4,9 @@ var FeedBox = React.createClass({
   },
 
   loadFeed: function(){
+    var ajaxUrl = window.location.origin+this.props.url
     $.ajax({
-      url: this.props.url,
+      url: ajaxUrl,
       dataType: 'json',
       cache: false,
       success: function(data) {
@@ -97,7 +98,7 @@ var FeedBlog = React.createClass({
     );
   },
 });
-ReactDOM.render(<FeedBox url="blogs/get-all/"/>,$("#content")[0]);
+ReactDOM.render(<FeedBox url="/blogs/get-all/"/>,$("#content")[0]);
 
 var check_continue_reading = function(){  //------------------ A helper function to check If Continue Reading required in a blog or not
   var blogText = $(".page .feedBlog .blog .blogText");
@@ -109,7 +110,7 @@ var check_continue_reading = function(){  //------------------ A helper function
     }
   }
 }
-
+console.log("asd");
 marked.setOptions({
   langPrefix: "language-",
   gfm: true,

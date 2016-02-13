@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 {% load staticfiles %}
 
-<link rel="stylesheet/less" type="text/css" href={% static "navbar/css/navbar.less" %}>
+<link rel="stylesheet" type="text/css" href={% static "navbar/css/navbar.css" %}>
 <div class="sideNav expand">
   <div class="wrapper">
     <div class="head">
@@ -9,37 +9,37 @@
       <h3 class="full">ASN - NSIT for ICPC</h3>
     </div>
     <div class="tabs_a">
-      <a href={% url 'home_page' %}>
+      <a href={% url 'home_page' %} data-ref="home">
         <div class="tab home">
           <i class="fa fa-home"></i>
           <h4>&nbsp;&nbsp;&nbsp;Home</h4>
         </div>
       </a>
-      <a href = {% url 'fourm_page'%}>
+      <a href = {% url 'fourm_page'%} data-ref="fourms">
         <div class="tab fourms">
           <i class="fa fa-users"></i>
           <h4>&nbsp;&nbsp;Fourms</h4>
         </div>
       </a>
-      <a href = {% url 'blog_page' %}>
+      <a href = {% url 'blog_page' %} data-ref="blogs">
         <div class="tab blogs">
           <i class="fa fa-rss"></i>
           <h4>&nbsp;&nbsp;&nbsp;Blogs</h4>
         </div>
       </a>
-      <a href = {% url 'event_page'%}>
+      <a href = {% url 'event_page'%} data-ref="events">
         <div class="tab events">
           { }
           <h4>&nbsp;&nbsp;&nbsp;Events</h4>
         </div>
       </a>
-      <a href = {% url 'snippet_page' %}>
+      <a href = {% url 'snippet_page' %} data-ref="snippets">
         <div class="tab snippets">
           <i class="fa fa-clipboard"></i>
           <h4>&nbsp;&nbsp;&nbsp;Snippets</h4>
         </div>
       </a>
-      <a href= {% url 'schedule_page' %}>
+      <a href= {% url 'schedule_page' %} data-ref="schedule">
         <div class="tab schedule">
           <i class="fa fa-clock-o"></i>
           <h4>&nbsp;&nbsp;&nbsp;Schedule</h4>

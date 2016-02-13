@@ -1,14 +1,14 @@
 {% extends "Base/base.html" %}
 {% load staticfiles %}
+{% block meta %}<meta data-location="blogs" />{% endblock %}
 {% block title %} ASN | Blogs {% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet/less" type="text/css" href={% static "BlogPage/css/BlogPage.less" %}>
-	<link href={% static "prism/prism.css" %} rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href={% static "BlogPage/css/BlogPage.css" %}>
+	<link href={% static "prism/prism.css" %} rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block top_scripts %}
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gist-embed/2.4/gist-embed.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>

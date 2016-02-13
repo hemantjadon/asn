@@ -1,9 +1,10 @@
 {% extends "Base/base.html" %}
 {% load staticfiles %}
+{% block meta %}<meta data-location="home" />{% endblock %}
 {% block title %}ASN | Home{% endblock %}
 
 {% block stylesheets %}
-	<link rel="stylesheet/less" type="text/css" href={% static "HomePage/css/HomePage.less" %}>
+	<link rel="stylesheet" type="text/css" href={% static "HomePage/css/HomePage.css" %}>
 {% endblock %}
 
 {% block top_scripts%}

@@ -86,148 +86,132 @@ var highlightNav = {
 }
 
 var ajaxifyLinks = {
-  identifyWindow : function(){
-    var location = window.location.pathname;
-    location = location.split('/')[1];
-    if(location === "")
-    {
-      return "home";
-    }
-    else
-    {
-      return location;
-    }
-  },
-
-  identifyClickLink : function(jobj){
-    var link = jobj.context.pathname.split('/')[1];
-    if(link !== "")
-    {
-      return link;
-    }
-    else
-    {
-      return "home";
-    }
-  },
-
-  addInitHistory : function(){
-    historyObject = $(".page .mainContent .wrapper").html();
-    var window_location = ajaxifyLinks.identifyWindow();
-
-    function toTitleCase(str)
-    {
-        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    }
-    var title = "ASN | "+toTitleCase(window_location);
-    var newUrl;
-    if(window_location !== "home")
-    {
-      newUrl = "/"+window_location;
-    }
-    else
-    {
-      newUrl = "/";
-    }
-    window.history.replaceState(historyObject,title,newUrl);
-    document.title = title;
-  },
-
-  ajaxify : function(target){
-    var baseUrl = window.location.origin;
-    var targetUrl;
-    if(target==="home")
-    {
-      targetUrl=baseUrl;
-    }
-    else
-    {
-      targetUrl = baseUrl+'/'+target+'/';
-    }
-
-    $.ajax({
-      url : targetUrl,
-      type : 'GET',
-      contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
-      dataType : 'html',
-      success : function(response,status,xhr){
-        ajaxifyLinks.ajaxifyOnResponse(response,status,xhr,target);
-      }
-    });
-    highlightNav.init(target);
-  },
-
-  ajaxifyOnResponse : function(response,status,xhr,target){
-    var historyObject;
-    if (status === "success")
-    {
-      historyObject = $(".page .mainContent .wrapper").html()
-      $(".page .mainContent .wrapper").html(response);
-      if(response===null)
-      {
-        response = historyObject;
-      }
-      ajaxifyLinks.ajaxifyChangeHistoryState(target,response);
-    }
-
-    else
-    {
-        console.log("Error --- In AJAX!!");
-    }
-  },
-
-  ajaxifyChangeHistoryState : function(target,historyObject){
-    function toTitleCase(str)
-    {
-        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    }
-    var title = "ASN | "+toTitleCase(target);
-    var newUrl;
-    if(target !== "home")
-    {
-      newUrl = "/"+target;
-    }
-    else
-    {
-      newUrl = "/";
-    }
-    window.history.pushState(historyObject,title,newUrl);
-    document.title = title;
-  },
-
-  ajaxifyBack : function(){
-    window.onpopstate = function(event){
-      $(".page .mainContent .wrapper").html(window.history.state);
-      highlightNav.init();
-    };
-  },
-
-  init : function(){
-    ajaxifyLinks.addInitHistory();
+  addEventListener: function(){
     var links = $(".sideNav .wrapper .tabs_a a");
-    for (i=0; i < links.length; i++)
-    {
-      $(links[i]).click(function(e){
-        e.preventDefault();
-        window_location = ajaxifyLinks.identifyWindow();
-        link_ref = ajaxifyLinks.identifyClickLink($(this));
-
-        if(link_ref === window_location)
-        {
-          console.log("Warning : Quiting ajaxifyLinks as on same tab");
-          return;
-        }
-        else {
-          ajaxifyLinks.ajaxify(link_ref);
-        }
-        ajaxifyLinks.ajaxifyBack();
+    for(i=0;i<links.length;i++){
+      $(links[i]).on("click",function(event){
+        event.preventDefault();
+        ajaxifyLinks.init.apply(this);
       });
     }
+  },
+
+  getMetaPageLocation: function(){
+    var meta_elem = $("head meta[data-location]");
+    var location = meta_elem.attr("data-location");
+    return location;
+  },
+
+  init: function(){
+    var pageLocation = ajaxifyLinks.getMetaPageLocation();
+    var refLocation = $(this).attr("data-ref");
+    if (pageLocation === refLocation){
+      return;
+    }
+
+    else{
+      relUrl = $(this).attr("href");
+      ajaxifyLinks.ajaxify(relUrl);
+    }
+  },
+
+  ajaxify: function(relUrl){
+    var baseUrl = window.location.origin;
+    var callUrl = baseUrl+relUrl;
+    $.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+        options.async = true;
+    });
+    $.ajax({
+      url: callUrl,
+      dataType: "json",
+      cache: false,
+      async: true,
+      success: function(response){
+        ajaxifyLinks.processResponse.init(response);
+      },
+      error: function(xhr,status,err){
+        console.log(err);
+      },
+    });
+  },
+
+  processResponse: {
+    insertStylesheets: function(stylesheets){
+      for(i=0;i<stylesheets.length;i++){
+        var obj = stylesheets[i];
+        var existingSheets = $("link");
+        var exists = false;
+        for (var j = 0; j < existingSheets.length; j++) {
+          var ref = $(existingSheets[j]).attr('href').toString();
+          if(ref === obj.href){
+            exists = true;
+            break;
+          }
+        }
+        if(!exists){
+          var sheet = document.createElement('link');
+          sheet.href = obj.href;
+          sheet.rel = obj.rel;
+          sheet.type = obj.type;
+          $('head').append(sheet);
+        }
+      }
+    },
+
+    insertTopScripts: function(top_scripts){
+      for(i=0;i<top_scripts.length;i++){
+        var obj = top_scripts[i];
+        var existingScripts = $("script");
+        var exists = false;
+        for (var j = 0; j < existingScripts.length; j++) {
+          var ref = $(existingScripts[j]).attr('src').toString();
+          if(ref === obj.href){
+            exists = true;
+            break;
+          }
+        }
+        if(!exists){
+          var script = document.createElement('script');
+          script.src = obj.src;
+          script.type = obj.type;
+          script.async = true;
+          $('head').append(script);
+        }
+      }
+    },
+
+    insertScripts: function(scripts){
+      for(i=0;i<scripts.length;i++){
+        var obj = scripts[i];
+        var existingScripts = $("script");
+        var exists = false;
+        for (var j = 0; j < existingScripts.length; j++) {
+          var ref = $(existingScripts[j]).attr('src').toString();
+          if(ref === obj.src){
+            exists = true;
+            break;
+          }
+        }
+        if(!exists){
+          var script = document.createElement('script');
+          script.src = obj.src;
+          script.type = obj.type;
+          script.async = true;
+          document.body.appendChild(script);
+        }
+      }
+    },
+
+    init: function(response){
+      this.insertStylesheets(response.stylesheets);
+      //this.insertTopScripts(response.top_scripts);
+      //this.insertScripts(response.scripts);
+    },
   },
 }
 
 $(document).ready(function(){
     navToggle.init();
     highlightNav.init();
-    ajaxifyLinks.init();
+    ajaxifyLinks.addEventListener();
 })
