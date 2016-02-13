@@ -49,7 +49,5 @@ var continueReading = {
 }
 
 $(window).load(function(){
-  console.log("window loaded");
-  marginAdjust.init();
-  var parser = new less.Parser();
+  //marginAdjust.init();
 });

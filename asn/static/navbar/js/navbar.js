@@ -97,9 +97,14 @@ var ajaxifyLinks = {
   },
 
   getMetaPageLocation: function(){
-    var meta_elem = $("head meta[data-location]");
-    var location = meta_elem.attr("data-location");
-    return location;
+    var meta_elem = $("head meta[data-location]")[0];
+    if (meta_elem === undefined){
+      return undefined;
+    }
+    else {
+      var location=$(meta_elem).attr('data-location');
+      return location;
+    }
   },
 
   init: function(){
@@ -124,10 +129,14 @@ var ajaxifyLinks = {
     $.ajax({
       url: callUrl,
       dataType: "json",
-      cache: false,
+      cache: true,
       async: true,
       success: function(response){
         ajaxifyLinks.processResponse.init(response);
+        //ajaxifyLinks.handleHistory.placeCurrentState(response.new_page_url);
+        ajaxifyLinks.changeMetaPageLocation(response.new_page_location);
+        ajaxifyLinks.changeTitle(response.new_page_title);
+        ajaxifyLinks.updateUrl(response.new_page_url);
       },
       error: function(xhr,status,err){
         console.log(err);
@@ -164,54 +173,237 @@ var ajaxifyLinks = {
         var existingScripts = $("script");
         var exists = false;
         for (var j = 0; j < existingScripts.length; j++) {
-          var ref = $(existingScripts[j]).attr('src').toString();
-          if(ref === obj.href){
+          var ref = $(existingScripts[j]).attr('src');
+          if (ref === undefined) {
+            ref = $(existingScripts[j]).attr('data-src');
+          }
+
+          if (ref === obj.src) {
             exists = true;
-            break;
           }
         }
         if(!exists){
-          var script = document.createElement('script');
-          script.src = obj.src;
-          script.type = obj.type;
-          script.async = true;
-          $('head').append(script);
+          $.ajax({
+            url: obj.src,
+            dataType: 'script',
+            cache: true, // otherwise will get fresh copy every page load
+            success: function(response) {
+              var script = document.createElement('script');
+              script.setAttribute("data-src",this.url);
+              $('body').append(script);
+            },
+            error: function(xhr,status,err){
+              console.log(err.toString());
+            }
+          });
         }
       }
     },
 
-    insertScripts: function(scripts){
+    insertContent: function(string){
+      $(".page .mainContent .wrapper").html(string);
+    },
+
+    checkLoadedDependencies: function(dependencies){
+      var existingScripts = $('script[data-src]');
+      var existingScriptsUrls = []
+      for (var i = 0; i < existingScripts.length; i++) {
+        if($(existingScripts[i]).attr('data-src') !== undefined){
+          existingScriptsUrls.push($(existingScripts[i]).attr('data-src'));
+        }
+      }
+
+      var loaded = false;
+      for(i=0;i<dependencies.length;i++){
+        for(j=0;j<existingScriptsUrls.length;j++){
+          if (dependencies[i]===existingScriptsUrls[j]) {
+            loaded = true;
+            break;
+          }
+        }
+        if(j === existingScriptsUrls.length){
+          loaded===false;
+          break;
+        }
+      }
+      return loaded;
+    },
+
+    insertBottomScripts: function(scripts){
       for(i=0;i<scripts.length;i++){
         var obj = scripts[i];
         var existingScripts = $("script");
         var exists = false;
         for (var j = 0; j < existingScripts.length; j++) {
-          var ref = $(existingScripts[j]).attr('src').toString();
-          if(ref === obj.src){
+          var ref = $(existingScripts[j]).attr('src');
+          if (ref === undefined) {
+            ref = $(existingScripts[j]).attr('data-src');
+          }
+
+          if (ref === obj.src) {
             exists = true;
-            break;
           }
         }
         if(!exists){
-          var script = document.createElement('script');
-          script.src = obj.src;
-          script.type = obj.type;
-          script.async = true;
-          document.body.appendChild(script);
+          $.ajax({
+            url: obj.src,
+            dataType: 'script',
+            cache: true, // otherwise will get fresh copy every page load
+            success: function(response) {
+              var script = document.createElement('script');
+              script.setAttribute("data-src",this.url);
+              $('body').append(script);
+            },
+            error: function(xhr,status,err){
+              console.log(err.toString());
+            }
+          });
         }
       }
     },
 
     init: function(response){
       this.insertStylesheets(response.stylesheets);
-      //this.insertTopScripts(response.top_scripts);
-      //this.insertScripts(response.scripts);
+      this.insertTopScripts(response.top_scripts);
+      this.insertContent(response.rendered_string);
+      var interval=setInterval(function () {
+        var loaded = this.checkLoadedDependencies(response.bottom_scripts.dependencies);
+
+        if(loaded === true){
+          clearInterval(interval);
+          this.insertBottomScripts(response.bottom_scripts.scripts);
+        };
+      }.bind(this), 100);
+    },
+  },
+
+  changeMetaPageLocation: function(new_page_location){
+    if(new_page_location === undefined){
+      console.error("Wrong Ajax Response new_page_location not specified");
+    }
+    var currentLocation = $('head meta[data-location]').attr('data-location');
+    if (currentLocation !== undefined) {
+      $('head meta[data-location]').attr('data-location',new_page_location);
+    }
+    else {
+      var meta_elem = document.createElement('meta');
+      $(meta_elem).attr('data-location',new_page_location);
+      $('head').prepend(meta_elem);
+    }
+  },
+
+  changeTitle: function(new_page_title){
+    $('head title').html(new_page_title);
+  },
+
+  updateUrl: function(new_page_url){
+    if (new_page_url !== undefined) {
+      window.location.replace(new_page_url);
+    }
+  },
+
+  handleHistory: {
+    addInitialState: function(){
+      //var html_content = $('.page .mainContent .wrapper')[0];
+      var html_content = $('body')[0];
+      var content="";
+      if (html_content === undefined){
+        content = undefined;
+      }
+      else {
+        content = $(html_content).html();
+      }
+
+      var location = ajaxifyLinks.getMetaPageLocation();
+      var title = $('head title').html();
+      if (location === undefined) {
+        console.error("Page location meta element not defined. It is required for Adding To History as Navbar Links are ajax");
+      }
+      else {
+        if(content !== undefined){
+          history.replaceState({"content":content,"title":title,"location":location},location,window.location);
+        }
+        else{
+          console.error("No HTML tag on page. Nothing to add to history");
+        }
+      }
+    },
+
+    placeCurrentState: function(new_page_url){
+      //var html_content = $('.page .mainContent .wrapper')[0];
+      var html_content = $('body')[0];
+      var content="";
+      if (html_content === undefined){
+        content = undefined;
+      }
+      else {
+        content = $(html_content).html();
+      }
+
+      var location = ajaxifyLinks.getMetaPageLocation();
+      var title = $('head title').html();
+      if (location === undefined) {
+        console.error("Page location meta element not defined. It is required for Adding To History as Navbar Links are ajax");
+      }
+      else {
+        if(content !== undefined){
+          history.pushState({"content":content,"title":title,"location":location},location,window.location);
+        }
+        else{
+          console.error("No HTML tag on page. Nothing to add to history");
+        }
+      }
+    },
+
+    replaceCurrentState: function(){
+      //var html_content = $('.page .mainContent .wrapper')[0];
+      var html_content = $('body')[0];
+      var content="";
+      if (html_content === undefined){
+        content = undefined;
+      }
+      else {
+        content = $(html_content).html();
+      }
+      var title = $('head title').html();
+
+      var location = ajaxifyLinks.getMetaPageLocation();
+      if (location === undefined) {
+        console.error("Page location meta element not defined. It is required for Adding To History as Navbar Links are ajax");
+      }
+      else {
+        if(content !== undefined){
+          history.replaceState({"content":content,"title":title,"location":location},location,window.location);
+        }
+        else{
+          console.error("No HTML tag on page. Nothing to add to history");
+        }
+      }
+    },
+
+    onPopState: function(event){
+      //$('.page .mainContent .wrapper').html(event.state.content);
+      $('body').html(event.state.content);
+      $('head title').html(event.state.title);
+      if(event.state.location !== undefined){
+        var meta_elem = $('head meta[data-location]')[0];
+        if (meta_elem !== undefined) {
+          $(meta_elem).attr("data-location",event.state.location);
+        }
+        else {
+          var meta_elem = document.createElement('meta');
+          $(meta_elem).attr("data-location",event.state.location);
+          $('head').prepend(meta_elem);
+        }
+      }
     },
   },
 }
 
-$(document).ready(function(){
+$(window).load(function(){
     navToggle.init();
     highlightNav.init();
+    //ajaxifyLinks.handleHistory.addInitialState();
+    //window.onpopstate = ajaxifyLinks.handleHistory.onPopState;
     ajaxifyLinks.addEventListener();
 })

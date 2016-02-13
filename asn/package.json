@@ -11,5 +11,8 @@
     "url": "../.git"
   },
   "author": "Hemant Jadon",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.5.1"
+  }
 }
