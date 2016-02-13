@@ -1,7 +1,7 @@
 from django.contrib.staticfiles.templatetags.staticfiles import static
 
 stylesheets = [
-    {"type":"text/css","rel":"stylesheet/less","href":static("BlogPage/css/BlogPage.less")},
+    {"type":"text/css","rel":"stylesheet","href":static("BlogPage/css/BlogPage.css")},
     {"type":"text/css","rel":"stylesheet","href":static("prism/prism.css")},
 ]
 

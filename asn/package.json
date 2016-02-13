@@ -1,0 +1,15 @@
+{
+  "name": "asn",
+  "version": "1.0.0",
+  "description": "Asn-Project",
+  "main": "gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "../.git"
+  },
+  "author": "Hemant Jadon",
+  "license": "ISC"
+}
