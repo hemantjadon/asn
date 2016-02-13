@@ -13,6 +13,13 @@
 {% block content %}
 	A
 	{%if request.user.is_anonymous %}
+	  <button role="login" class="login">
+	    Login
+	  </button>
+	{% else %}
+	<button role="logout" class="logout">
+	  Logout
+	</button>
 	{% endif %}
 {% endblock %}
 

@@ -36,51 +36,50 @@ var highlightNav = {
 
   init : function(tab){
     var location = highlightNav.identify(tab);
-    highlightNav.highlight(location);
+    if (location !== undefined){
+      highlightNav.highlight(location);
+    }
+    else {
+      highlightNav.highlightOnHover();
+    }
   },
 
   identify : function(tab){
-    if(tab === undefined)
-    {
-      var location = window.location.pathname
-      location = location.split('/')[1];
-      if(location === "")
-      {
-        return "home";
+    if(tab === undefined){
+      var meta_elem = $('head meta[data-location]')[0];
+      if (meta_elem === undefined) {
+        return undefined;
       }
-      else
-      {
-        return location;
+      else {
+        return $(meta_elem).attr('data-location');
       }
     }
-    else
-    {
+    else{
         return tab;
     }
   },
 
   highlight : function(location){
+    var pannel = $(".sideNav .wrapper .tabs_a a[data-ref]");
+    var tabs = pannel.children('div');
+    for (var i = 0; i < tabs.length; i++) {
+      var ref = $(tabs[i]).parent().attr('data-ref');
+      if (ref === location) {
+        $(tabs[i]).css({"border-left-color":"red"});
+      }
+    }
+  },
+
+  highlightOnHover: function(){
     var pannel = $(".sideNav .wrapper .tabs_a");
     var tabs = pannel.children().children();
-    var brk = false;
-    for(i=0; i < tabs.length; i++)
-    {
-      var classList = $(tabs[i]).attr('class').split(' ');
-      for(j=0; j < classList.length; j++)
-      {
-        if(classList[j]===location)
-        {
-          var tab = $(tabs[i]);
-          tab.css({"border-left":"3px solid red"});
-          brk = true;
-          break;
-        }
-        else
-        {
-          var tab = $(tabs[i]);
-          tab.css({"border-left":"3px solid transparent"});
-        }
-      }
+    for (var i = 0; i < tabs.length; i++) {
+      $(tabs[i]).mouseenter(function(event){
+        $(this).css({"border-left-color":"red"});
+      });
+      $(tabs[i]).mouseleave(function(event){
+        $(this).css({"border-left-color":"transparent"});
+      });
     }
   },
 }
@@ -88,7 +87,7 @@ var highlightNav = {
 var ajaxifyLinks = {
   addEventListener: function(){
     var links = $(".sideNav .wrapper .tabs_a a");
-    for(i=0;i<links.length;i++){
+    for(var i=0;i<links.length;i++){
       $(links[i]).on("click",function(event){
         event.preventDefault();
         ajaxifyLinks.init.apply(this);
@@ -146,7 +145,7 @@ var ajaxifyLinks = {
 
   processResponse: {
     insertStylesheets: function(stylesheets){
-      for(i=0;i<stylesheets.length;i++){
+      for(var i=0;i<stylesheets.length;i++){
         var obj = stylesheets[i];
         var existingSheets = $("link");
         var exists = false;
@@ -168,7 +167,7 @@ var ajaxifyLinks = {
     },
 
     insertTopScripts: function(top_scripts){
-      for(i=0;i<top_scripts.length;i++){
+      for(var i=0;i<top_scripts.length;i++){
         var obj = top_scripts[i];
         var existingScripts = $("script");
         var exists = false;
@@ -214,8 +213,8 @@ var ajaxifyLinks = {
       }
 
       var loaded = false;
-      for(i=0;i<dependencies.length;i++){
-        for(j=0;j<existingScriptsUrls.length;j++){
+      for(var i=0;i<dependencies.length;i++){
+        for(var j=0;j<existingScriptsUrls.length;j++){
           if (dependencies[i]===existingScriptsUrls[j]) {
             loaded = true;
             break;
@@ -230,7 +229,7 @@ var ajaxifyLinks = {
     },
 
     insertBottomScripts: function(scripts){
-      for(i=0;i<scripts.length;i++){
+      for(var i=0;i<scripts.length;i++){
         var obj = scripts[i];
         var existingScripts = $("script");
         var exists = false;
@@ -298,7 +297,7 @@ var ajaxifyLinks = {
 
   updateUrl: function(new_page_url){
     if (new_page_url !== undefined) {
-      window.location.replace(new_page_url);
+      console.log(window.location);
     }
   },
 

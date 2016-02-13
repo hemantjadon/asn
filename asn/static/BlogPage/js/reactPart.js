@@ -156,7 +156,7 @@ ReactDOM.render(React.createElement(FeedBox, { url: '/blogs/get-all/' }), $("#co
 var check_continue_reading = function check_continue_reading() {
   //------------------ A helper function to check If Continue Reading required in a blog or not
   var blogText = $(".page .feedBlog .blog .blogText");
-  for (i = 0; i < blogText.length; i++) {
+  for (var i = 0; i < blogText.length; i++) {
     if (blogText[i].offsetHeight < blogText[i].scrollHeight) {} else {
       $(blogText[i]).children(".continueReading").css({ "display": "none" });
     }

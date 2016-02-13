@@ -103,7 +103,7 @@ ReactDOM.render(<FeedBox url="/blogs/get-all/"/>,$("#content")[0]);
 
 var check_continue_reading = function(){  //------------------ A helper function to check If Continue Reading required in a blog or not
   var blogText = $(".page .feedBlog .blog .blogText");
-  for(i=0;i<blogText.length;i++){
+  for(var i=0;i<blogText.length;i++){
     if (blogText[i].offsetHeight < blogText[i].scrollHeight){
     }
     else {
