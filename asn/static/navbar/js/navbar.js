@@ -51,7 +51,16 @@ var highlightNav = {
         return undefined;
       }
       else {
-        return $(meta_elem).attr('data-location');
+        var navLinks = $(".sideNav .wrapper .tabs_a a[data-ref]");
+        var location = $(meta_elem).attr('data-location');
+        for (var i = 0; i < navLinks.length; i++) {
+          if (location === $(navLinks[i]).attr('data-ref')){
+            return location;
+          }
+        }
+        if(i === navLinks.length){
+          return undefined;
+        }
       }
     }
     else{
@@ -66,6 +75,9 @@ var highlightNav = {
       var ref = $(tabs[i]).parent().attr('data-ref');
       if (ref === location) {
         $(tabs[i]).css({"border-left-color":"red"});
+      }
+      else{
+        $(tabs[i]).css({"border-left-color":"transparent"});
       }
     }
   },
@@ -90,6 +102,8 @@ var ajaxifyLinks = {
     for(var i=0;i<links.length;i++){
       $(links[i]).on("click",function(event){
         event.preventDefault();
+        var tab = $(this).attr('data-ref')
+        highlightNav.init(tab);  //---- Highlighting nav accordingly
         ajaxifyLinks.init.apply(this);
       });
     }
@@ -132,7 +146,7 @@ var ajaxifyLinks = {
       async: true,
       success: function(response){
         ajaxifyLinks.processResponse.init(response);
-        //ajaxifyLinks.handleHistory.placeCurrentState(response.new_page_url);
+        ajaxifyLinks.handleHistory.placeCurrentState(response.new_page_url);
         ajaxifyLinks.changeMetaPageLocation(response.new_page_location);
         ajaxifyLinks.changeTitle(response.new_page_title);
         ajaxifyLinks.updateUrl(response.new_page_url);
@@ -179,6 +193,13 @@ var ajaxifyLinks = {
 
           if (ref === obj.src) {
             exists = true;
+            var dynamicCallback = $(existingScripts[j]).attr('data-dynamicCallback');
+            if (dynamicCallback !== undefined) {
+              var callback = eval(dynamicCallback);
+              if (typeof callback == 'function') {
+                callback();
+              }
+            }
           }
         }
         if(!exists){
@@ -186,9 +207,13 @@ var ajaxifyLinks = {
             url: obj.src,
             dataType: 'script',
             cache: true, // otherwise will get fresh copy every page load
+            context: obj,
             success: function(response) {
               var script = document.createElement('script');
-              script.setAttribute("data-src",this.url);
+              script.setAttribute("data-src",this.src);
+              if(this.dataDynamicCallback !== undefined){
+                script.setAttribute('data-dynamicCallback',this.dataDynamicCallback);
+              }
               $('body').append(script);
             },
             error: function(xhr,status,err){
@@ -204,11 +229,14 @@ var ajaxifyLinks = {
     },
 
     checkLoadedDependencies: function(dependencies){
-      var existingScripts = $('script[data-src]');
+      var existingScripts = $('script[data-src],script[src]');
       var existingScriptsUrls = []
       for (var i = 0; i < existingScripts.length; i++) {
         if($(existingScripts[i]).attr('data-src') !== undefined){
           existingScriptsUrls.push($(existingScripts[i]).attr('data-src'));
+        }
+        if($(existingScripts[i]).attr('src') !== undefined){
+          existingScriptsUrls.push($(existingScripts[i]).attr('src'));
         }
       }
 
@@ -225,7 +253,12 @@ var ajaxifyLinks = {
           break;
         }
       }
-      return loaded;
+      if (dependencies.length===0) {
+        return true;
+      }
+      else{
+        return loaded;
+      }
     },
 
     insertBottomScripts: function(scripts){
@@ -241,6 +274,13 @@ var ajaxifyLinks = {
 
           if (ref === obj.src) {
             exists = true;
+            var dynamicCallback = $(existingScripts[j]).attr('data-dynamicCallback');
+            if (dynamicCallback !== undefined) {
+              var callback = eval(dynamicCallback);
+              if (typeof callback == 'function') {
+                callback();
+              }
+            }
           }
         }
         if(!exists){
@@ -248,9 +288,13 @@ var ajaxifyLinks = {
             url: obj.src,
             dataType: 'script',
             cache: true, // otherwise will get fresh copy every page load
+            context: obj, //---- changes this of success and callback functions
             success: function(response) {
               var script = document.createElement('script');
-              script.setAttribute("data-src",this.url);
+              script.setAttribute("data-src",this.src);
+              if(this.dataDynamicCallback !== undefined){
+                script.setAttribute('data-dynamicCallback',this.dataDynamicCallback);
+              }
               $('body').append(script);
             },
             error: function(xhr,status,err){
@@ -267,7 +311,6 @@ var ajaxifyLinks = {
       this.insertContent(response.rendered_string);
       var interval=setInterval(function () {
         var loaded = this.checkLoadedDependencies(response.bottom_scripts.dependencies);
-
         if(loaded === true){
           clearInterval(interval);
           this.insertBottomScripts(response.bottom_scripts.scripts);
@@ -297,14 +340,14 @@ var ajaxifyLinks = {
 
   updateUrl: function(new_page_url){
     if (new_page_url !== undefined) {
-      console.log(window.location);
+      //window.location.replace(new_page_url);
     }
   },
 
   handleHistory: {
     addInitialState: function(){
-      //var html_content = $('.page .mainContent .wrapper')[0];
-      var html_content = $('body')[0];
+      var html_content = $('.page .mainContent .wrapper')[0];
+      //var html_content = $('body')[0];
       var content="";
       if (html_content === undefined){
         content = undefined;
@@ -329,8 +372,8 @@ var ajaxifyLinks = {
     },
 
     placeCurrentState: function(new_page_url){
-      //var html_content = $('.page .mainContent .wrapper')[0];
-      var html_content = $('body')[0];
+      var html_content = $('.page .mainContent .wrapper')[0];
+      //var html_content = $('body')[0];
       var content="";
       if (html_content === undefined){
         content = undefined;
@@ -354,9 +397,9 @@ var ajaxifyLinks = {
       }
     },
 
-    replaceCurrentState: function(){
-      //var html_content = $('.page .mainContent .wrapper')[0];
-      var html_content = $('body')[0];
+    replaceCurrentState: function(new_url){
+      var html_content = $('.page .mainContent .wrapper')[0];
+      //var html_content = $('body')[0];
       var content="";
       if (html_content === undefined){
         content = undefined;
@@ -372,7 +415,7 @@ var ajaxifyLinks = {
       }
       else {
         if(content !== undefined){
-          history.replaceState({"content":content,"title":title,"location":location},location,window.location);
+          history.replaceState({"content":content,"title":title,"location":location},location,new_url);
         }
         else{
           console.error("No HTML tag on page. Nothing to add to history");
@@ -381,8 +424,8 @@ var ajaxifyLinks = {
     },
 
     onPopState: function(event){
-      //$('.page .mainContent .wrapper').html(event.state.content);
-      $('body').html(event.state.content);
+      $('.page .mainContent .wrapper').html(event.state.content);
+      //$('body').html(event.state.content);
       $('head title').html(event.state.title);
       if(event.state.location !== undefined){
         var meta_elem = $('head meta[data-location]')[0];
@@ -395,6 +438,7 @@ var ajaxifyLinks = {
           $('head').prepend(meta_elem);
         }
       }
+      highlightNav.init(location);
     },
   },
 }
@@ -404,5 +448,5 @@ $(window).load(function(){
     highlightNav.init();
     //ajaxifyLinks.handleHistory.addInitialState();
     //window.onpopstate = ajaxifyLinks.handleHistory.onPopState;
-    ajaxifyLinks.addEventListener();
-})
+    //ajaxifyLinks.addEventListener();
+});

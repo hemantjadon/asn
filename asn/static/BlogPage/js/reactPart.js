@@ -20,7 +20,7 @@ var FeedBox = React.createClass({
         Prism.highlightAll(); //--- Enables Prism Highlighting For All
         $('ul.tabs').tabs(); //--- Initialize Materialize tabs
         $('img').addClass("responsive-img"); //--- Making images of blogs responsive-img
-        //ajaxifyLinks.handleHistory.replaceCurrentState(window.location.origin+"/blogs/"); //--- Adding the recieved content to history
+        //ajaxifyLinks.handleHistory.replaceCurrentState(window.location.origin + "/blogs/"); //--- Adding the recieved content to history
       }).bind(this),
       error: (function (xhr, status, err) {
         console.log(xhr);
@@ -151,7 +151,12 @@ var FeedBlog = React.createClass({
     );
   }
 });
-ReactDOM.render(React.createElement(FeedBox, { url: '/blogs/get-all/' }), $("#content")[0]);
+
+var ReactGenerationCallback = function ReactGenerationCallback() {
+  //--------- This Is included so that the function can be called immediately after link clicking even if script exists
+  ReactDOM.render(React.createElement(FeedBox, { url: '/blogs/get-all/' }), $("#content")[0]);
+};
+ReactGenerationCallback();
 
 var check_continue_reading = function check_continue_reading() {
   //------------------ A helper function to check If Continue Reading required in a blog or not

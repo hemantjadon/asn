@@ -99,7 +99,11 @@ var FeedBlog = React.createClass({
     );
   },
 });
-ReactDOM.render(<FeedBox url="/blogs/get-all/"/>,$("#content")[0]);
+
+var ReactGenerationCallback = function(){    //--------- This Is included so that the function can be called immediately after link clicking even if script exists
+  ReactDOM.render(<FeedBox url="/blogs/get-all/"/>,$("#content")[0]);
+}
+ReactGenerationCallback();
 
 var check_continue_reading = function(){  //------------------ A helper function to check If Continue Reading required in a blog or not
   var blogText = $(".page .feedBlog .blog .blogText");

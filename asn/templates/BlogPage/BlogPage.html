@@ -8,6 +8,10 @@
 	<link href={% static "prism/prism.css" %} rel="stylesheet" type="text/css">
 {% endblock %}
 
+{% block navbar %}
+	{% include "navbar/navbar.html" with class="expand"%}
+{% endblock %}
+
 {% block top_scripts %}
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
@@ -23,6 +27,6 @@
 {% endblock %}
 
 {% block scripts %}
-	<script type="text/babel" src={% static "BlogPage/js/reactPart.js"%}></script>
+	<script type="text/javascript" src={% static "BlogPage/js/reactPart.js"%} data-dynamicCallback="ReactGenerationCallback()"></script>
 	<script type="text/javascript" src={% static "BlogPage/js/BlogPage.js"%}></script>
 {% endblock %}

@@ -49,5 +49,5 @@ var continueReading = {
 }
 
 $(window).load(function(){
-  //marginAdjust.init();
+  marginAdjust.init();
 });

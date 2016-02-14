@@ -7,6 +7,9 @@ from django.contrib.auth import login,logout,authenticate
 from user.models import AuthUser,Email
 # Create your views here.
 
+def LoginPage(request):
+    return render(request,"LoginPage/loginpage.html")
+    
 def FourmPage(request):
     return HttpResponse("hello")
 

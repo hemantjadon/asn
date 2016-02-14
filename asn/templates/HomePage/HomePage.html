@@ -10,6 +10,10 @@
 {% block top_scripts%}
 {% endblock %}
 
+{% block navbar %}
+	{% include "navbar/navbar.html" with class="expand"%}
+{% endblock %}
+
 {% block content %}
 	A
 	{%if request.user.is_anonymous %}

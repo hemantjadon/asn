@@ -2,12 +2,13 @@
 {% load staticfiles %}
 
 <link rel="stylesheet" type="text/css" href={% static "navbar/css/navbar.css" %}>
-<div class="sideNav expand">
+<div class="sideNav {{class}}">
   <div class="wrapper">
     <div class="head">
       <h3 class="short">ASN</h3>
       <h3 class="full">ASN - NSIT for ICPC</h3>
     </div>
+
     <div class="tabs_a">
       <a href={% url 'home_page' %} data-ref="home">
         <div class="tab home">
