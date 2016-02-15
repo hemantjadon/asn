@@ -4,13 +4,77 @@
 
 html{
   background-color: lighten(@backgroundColor,15%);
-  background-color: #fafafa;
+  min-height: 100vh;
 }
 
 .page {
   font-family: @baseFont;
   margin-left: 58px;
   transition: margin-left 0.3s ease;
-  min-height: 100vh;
   background-color: lighten(@backgroundColor,15%);
+
+  .mainContent{
+    .wrapper{
+      #content{
+        .box{
+          margin-top: 35vh;
+          width: 450px;
+
+          .innerBox{
+            a{
+              text-decoration: none;
+            }
+            div{
+              padding-top: 30px;
+              padding-bottom: 30px;
+              padding-left: 20px;
+              padding-right: 20px;
+              font-size: 1.3em;
+              text-align: center;
+
+            }
+
+            div.facebook{
+              background-color: #3b5998;
+              color: white;
+              border: 1px 1px 0px 1px solid transparent;
+              border-radius: 10px 10px 0px 0px;
+              i{
+                padding-right: 20px;
+                font-size: 1.5em;
+              }
+              span{
+                padding-bottom: 5px;
+              }
+            }
+            div.google{
+              background-color: white;
+              color: #dc4e41;
+              border: 0px 1px 0px 1px solid transparent;
+              i{
+                margin-right: 20px;
+                font-size: 1.5em;
+              }
+              span{
+                margin-bottom: 5px;
+              }
+            }
+            div.github{
+              background-color: black;
+              color: white;
+              border: 0px 1px 1px 1px solid transparent;
+              border-radius: 0px 0px 10px 10px;
+              i{
+                margin-right: 20px;
+                font-size: 1.5em;
+              }
+              span{
+                margin-bottom: 5px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

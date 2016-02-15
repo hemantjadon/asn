@@ -49,7 +49,7 @@
     </div>
     <div class="accounts">
       {% if request.user.is_anonymous %}
-        <a href = '#'>
+        <a href = {% url 'log_in' %} data-ref='login'>
           <div class="login-signup">
             <i class="fa fa-sign-in"></i>
             <h4>&nbsp;&nbsp;Login / Signup</h4>

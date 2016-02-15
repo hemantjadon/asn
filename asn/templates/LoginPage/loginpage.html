@@ -5,6 +5,7 @@
 
 {% block stylesheets %}
 	<link rel="stylesheet" type="text/css" href={% static "LoginPage/css/loginpage.css" %}>
+	<link rel="stylesheet" type="text/css" href = "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.12.0/bootstrap-social.min.css" />
 {% endblock %}
 
 {% block top_scripts %}
@@ -16,7 +17,25 @@
 
 {% block content %}
 	<div id="content">
-		FUCK THAT !!!
+		<div class="box container">
+			<div class="innerBox">
+				<a href={% url "social:begin" "facebook" %}>
+					<div class="facebook ">
+						<i class="fa fa-facebook"></i><span>Log In with Facebook</span>
+					</div>
+				</a>
+				<a href={% url "social:begin" "google-oauth2" %}>
+					<div class="google">
+						<i class="fa fa-google-plus"></i><span>Log In with Google</span>
+					</div>
+				</a>
+				<a href={% url "social:begin" "github" %}>
+					<div class="github">
+						<i class="fa fa-github"></i><span>Log In with GitHub</span>
+					</div>
+				</a>
+			</div>
+		</div>
 	</div>
 {% endblock %}
 
