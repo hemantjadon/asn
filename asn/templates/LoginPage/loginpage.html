@@ -1,7 +1,7 @@
 {% extends "Base/base.html" %}
 {% load staticfiles %}
 {% block meta %}<meta data-location="login" />{% endblock %}
-{% block title %} ASN | Blogs {% endblock %}
+{% block title %} ASN | Login {% endblock %}
 
 {% block stylesheets %}
 	<link rel="stylesheet" type="text/css" href={% static "LoginPage/css/loginpage.css" %}>
@@ -11,14 +11,21 @@
 {% block top_scripts %}
 {% endblock %}
 
-{% block navbar %}
-	{% include "navbar/navbar.html" with class="collapsed" %}
-{% endblock %}
+{# block navbar #}
+	{# include "navbar/navbar.html" with class="collapsed" #}
+{# endblock #}
 
 {% block content %}
 	<div id="content">
-		<div class="box container">
+		<header>
+			<div class="logo">
+			</div>
+		</header>
+		<div class="box">
 			<div class="innerBox">
+				<header>
+					<h3><em>Everyone is Welcome.</em></h3>
+				</header>
 				<a href={% url "social:begin" "facebook" %}>
 					<div class="facebook ">
 						<i class="fa fa-facebook"></i><span>Log In with Facebook</span>
@@ -36,6 +43,9 @@
 				</a>
 			</div>
 		</div>
+		<footer>
+			<h5>Made with <i class="fa fa-heart"></i> by Folks like U.</h5>
+		</footer>
 	</div>
 {% endblock %}
 

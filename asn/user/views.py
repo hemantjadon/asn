@@ -9,7 +9,11 @@ from user.models import AuthUser,Email
 # Create your views here.
 
 def LoginPage(request):
-    return render(request,"LoginPage/loginpage.html")
+    print(request.user.is_anonymous())
+    if request.user.is_anonymous():
+        return render(request,"LoginPage/loginpage.html")
+    else:
+        return redirect(reverse('home_page'))
 
 def LogOut(request):
     logout(request)

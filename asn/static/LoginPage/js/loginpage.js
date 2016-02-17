@@ -27,7 +27,13 @@ var marginAdjust ={
 
   adjust: function(page,expanded,collapsed){
     var pannel = $(".sideNav");
-    var classList = pannel.attr('class').split(' ');
+    var classList = pannel.attr('class')
+    if (classList !== undefined){
+      classList = classList.split(' ');
+    }
+    else {
+      classList=[]
+    }
     var change = false;
     for (var i = 0; i < classList.length; i++) {
       if (classList[i] === "expand")
