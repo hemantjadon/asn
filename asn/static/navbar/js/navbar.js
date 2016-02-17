@@ -446,7 +446,7 @@ var ajaxifyLinks = {
 $(window).load(function(){
     navToggle.init();
     highlightNav.init();
-    //ajaxifyLinks.handleHistory.addInitialState();
-    //window.onpopstate = ajaxifyLinks.handleHistory.onPopState;
-    //ajaxifyLinks.addEventListener();
+    ajaxifyLinks.handleHistory.addInitialState();
+    window.onpopstate = ajaxifyLinks.handleHistory.onPopState;
+    ajaxifyLinks.addEventListener();
 });
