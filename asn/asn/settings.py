@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'social.apps.django_app.default',
     'user',
     'blogs',
+    'events',
 )
 
 MIDDLEWARE_CLASSES = (
