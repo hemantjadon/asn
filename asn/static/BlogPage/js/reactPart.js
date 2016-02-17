@@ -20,7 +20,7 @@ var FeedBox = React.createClass({
         Prism.highlightAll(); //--- Enables Prism Highlighting For All
         $('ul.tabs').tabs(); //--- Initialize Materialize tabs
         $('img').addClass("responsive-img"); //--- Making images of blogs responsive-img
-        //ajaxifyLinks.handleHistory.replaceCurrentState(window.location.origin + "/blogs/"); //--- Adding the recieved content to history
+        ajaxifyLinks.handleHistory.replaceCurrentState(window.location.origin + "/blogs/"); //--- Adding the recieved content to history
       }).bind(this),
       error: (function (xhr, status, err) {
         console.log(xhr);

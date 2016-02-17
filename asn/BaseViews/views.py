@@ -9,7 +9,19 @@ def HomePage(request):
     if(request.is_ajax() == False):
         return render(request,'HomePage/HomePage.html',{})
 
-    else:
+    # else:
+    #     response = {}
+    #     response["stylesheets"] = ajax_files.stylesheets
+    #     response["top_scripts"] = ajax_files.top_scripts
+    #     response["bottom_scripts"] = ajax_files.bottom_scripts
+    #     response["rendered_string"] = render_to_string("HomePage/HomePage_ajax.html",{"request":request})
+    #     response["new_page_location"] = "home"
+    #     response["new_page_title"] = "ASN | Home"
+    #     response["new_page_url"] = request.build_absolute_uri()
+    #     return JsonResponse(response)
+
+def HomePageAJAX(request):
+    if request.is_ajax():
         response = {}
         response["stylesheets"] = ajax_files.stylesheets
         response["top_scripts"] = ajax_files.top_scripts
