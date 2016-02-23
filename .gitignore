@@ -2,3 +2,5 @@
 migrations/
 venv/
 social_auth_config.py
+node_modules
+typings/

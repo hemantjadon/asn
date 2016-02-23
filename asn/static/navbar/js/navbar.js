@@ -2,7 +2,7 @@ var navToggle = {
   init : function(){
     $(".sideNav .wrapper .navToggle").click(function(){
       var pannel = $(".sideNav");
-      classList = pannel.attr('class').split(' ');
+      var classList = pannel.attr('class').split(' ');
       var change = false;
       for (var i = 0; i < classList.length; i++) {
         if (classList[i] === "expand")
@@ -10,7 +10,6 @@ var navToggle = {
           change = true;
           pannel.removeClass("expand");
           pannel.addClass("collapsed");
-          var x = pannel.css("width");
           $(".page").css({"margin-left":"58px"});
           break;
         }
@@ -19,7 +18,6 @@ var navToggle = {
           change = true;
           pannel.removeClass("collapsed");
           pannel.addClass("expand");
-          var x = pannel.css("width");
           $(".page").css({"margin-left":"220px"});
           break;
         }
@@ -128,7 +126,7 @@ var ajaxifyLinks = {
     }
 
     else{
-      relUrl = $(this).attr("href");
+      var relUrl = $(this).attr("href");
       ajaxifyLinks.ajaxify(relUrl);
     }
   },
@@ -363,7 +361,7 @@ var ajaxifyLinks = {
       }
       else {
         if(content !== undefined){
-          history.replaceState({"content":content,"title":title,"location":location},location,window.location);
+          history.replaceState({"content":content,"title":title,"location":location},location,window.location.toString());
         }
         else{
           console.error("No HTML tag on page. Nothing to add to history");
@@ -389,7 +387,7 @@ var ajaxifyLinks = {
       }
       else {
         if(content !== undefined){
-          history.pushState({"content":content,"title":title,"location":location},location,window.location);
+          history.pushState({"content":content,"title":title,"location":location},location,window.location.toString());
         }
         else{
           console.error("No HTML tag on page. Nothing to add to history");
@@ -433,7 +431,7 @@ var ajaxifyLinks = {
           $(meta_elem).attr("data-location",event.state.location);
         }
         else {
-          var meta_elem = document.createElement('meta');
+          meta_elem = document.createElement('meta');
           $(meta_elem).attr("data-location",event.state.location);
           $('head').prepend(meta_elem);
         }
